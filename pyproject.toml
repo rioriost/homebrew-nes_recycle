@@ -1,6 +1,6 @@
 [project]
 name = "nes-recycle"
-version = "0.0.1"
+version = "0.0.2"
 description = "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -9,6 +9,12 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = []
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7",
+  "pytest-cov>=4",
+]
 
 [project.scripts]
 nes_recycle = "nes_recycle.main:main"
