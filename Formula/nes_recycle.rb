@@ -7,7 +7,7 @@ class NesRecycle < Formula
   sha256 "6c316827f8325ed393997f0c7d36abcf146abb7562f2d1554ed73913ced10c57"
   license "MIT"
 
-  depends_on "python@3.11"
+  depends_on "python@3.14"
 
   def install
     virtualenv_install_with_resources
