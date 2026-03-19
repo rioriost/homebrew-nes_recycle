@@ -1,6 +1,6 @@
 [project]
 name = "nes-recycle"
-version = "0.0.3"
+version = "0.0.4"
 description = "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -20,8 +20,8 @@ test = [
 nes_recycle = "nes_recycle.main:main"
 
 [project.urls]
-Homepage = "https://github.com/rioriost/homebrew-nes_recycle"
-Issues = "https://github.com/rioriost/homebrew-nes_recycle/issues"
+Homepage = "https://github.com/rioriost/nes_recycle"
+Issues = "https://github.com/rioriost/nes_recycle/issues"
 
 [build-system]
 requires = ["hatchling>=1.27.0"]
@@ -43,41 +43,3 @@ exclude = [
   ".envrc",
   "confirm_form.html",
 ]
-
-[tool.nes_recycle.homebrew]
-formula_path = "Formula/nes_recycle.rb"
-formula_class = "NesRecycle"
-desc = "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
-homepage = "https://github.com/rioriost/homebrew-nes_recycle"
-license = "MIT"
-python = "python@3.11"
-package_name = "nes_recycle"
-
-[tool.nes_recycle.homebrew.urls]
-stable = "https://github.com/rioriost/homebrew-nes_recycle/archive/refs/tags/v0.0.1.tar.gz"
-
-[tool.nes_recycle.homebrew.sha256]
-stable = "REPLACE_WITH_SOURCE_TARBALL_SHA256"
-
-[tool.nes_recycle.homebrew.formula_template]
-content = '''
-class NesRecycle < Formula
-  include Language::Python::Virtualenv
-
-  desc "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
-  homepage "https://github.com/rioriost/homebrew-nes_recycle"
-  url "https://github.com/rioriost/homebrew-nes_recycle/archive/refs/tags/v0.0.1.tar.gz"
-  sha256 "REPLACE_WITH_SOURCE_TARBALL_SHA256"
-  license "MIT"
-
-  depends_on "python@3.11"
-
-  def install
-    virtualenv_install_with_resources
-  end
-
-  test do
-    assert_match "usage", shell_output("#{bin}/nes_recycle --help")
-  end
-end
-'''
