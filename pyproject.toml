@@ -1,5 +1,5 @@
 [project]
-name = "nes-recycle"
+name = "nes_recycle"
 version = "0.0.5"
 description = "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
 readme = { file = "README.md", content-type = "text/markdown" }

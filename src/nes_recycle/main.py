@@ -37,9 +37,7 @@ CAPSULE_TYPE_CODE_TO_LABEL = {
     "2": "ヴァーチュオ",
     "3": "オリジナルとヴァーチュオ",
 }
-CAPSULE_TYPE_LABEL_TO_CODE = {
-    label: code for code, label in CAPSULE_TYPE_CODE_TO_LABEL.items()
-}
+CAPSULE_TYPE_LABEL_TO_CODE = {label: code for code, label in CAPSULE_TYPE_CODE_TO_LABEL.items()}
 CAPSULE_TYPE_CODES = list(CAPSULE_TYPE_CODE_TO_LABEL.keys())
 CAPSULE_TYPE_LABELS = list(CAPSULE_TYPE_CODE_TO_LABEL.values())
 
@@ -83,9 +81,7 @@ def is_valid_capsule_type_code(value: str) -> bool:
 def parse_capsule_type_arg(value: str) -> str:
     normalized = normalize_capsule_type_code(value)
     if normalized not in CAPSULE_TYPE_CODE_TO_LABEL:
-        raise argparse.ArgumentTypeError(
-            "カプセル種類は 1 / 2 / 3 のいずれかで指定してください。"
-        )
+        raise argparse.ArgumentTypeError("カプセル種類は 1 / 2 / 3 のいずれかで指定してください。")
     return normalized
 
 
@@ -102,9 +98,7 @@ def masked_profile(profile: dict[str, str]) -> dict[str, str]:
         "address2": profile["address2"][:3] + "***" if profile["address2"] else "",
         "phone": mask_sensitive_value(profile["phone"]),
         "email": (
-            profile["email"].split("@", 1)[0][:1]
-            + "***@"
-            + profile["email"].split("@", 1)[1]
+            profile["email"].split("@", 1)[0][:1] + "***@" + profile["email"].split("@", 1)[1]
             if "@" in profile["email"]
             else "***"
         ),
@@ -153,9 +147,7 @@ def parse_date(value: str) -> str:
     try:
         return date.fromisoformat(value).isoformat()
     except ValueError as e:
-        raise argparse.ArgumentTypeError(
-            "日付は YYYY-MM-DD 形式で指定してください。"
-        ) from e
+        raise argparse.ArgumentTypeError("日付は YYYY-MM-DD 形式で指定してください。") from e
 
 
 def build_http_opener() -> urllib.request.OpenerDirector:
@@ -169,7 +161,7 @@ def fetch_calendar_config() -> dict[str, str]:
     bootstrap_request = urllib.request.Request(
         urllib.parse.urljoin(FORM_URL, "index.php"),
         headers={
-            "User-Agent": "nes-recycle/0.0.1",
+            "User-Agent": "nes_recycle/0.0.5",
             "Referer": FORM_URL,
         },
         method="GET",
@@ -180,16 +172,14 @@ def fetch_calendar_config() -> dict[str, str]:
             response.read()
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")
-        raise RuntimeError(
-            f"カレンダー初期化の HTTP エラー: {e.code}\n{body[:1000]}"
-        ) from e
+        raise RuntimeError(f"カレンダー初期化の HTTP エラー: {e.code}\n{body[:1000]}") from e
     except urllib.error.URLError as e:
         raise RuntimeError(f"カレンダー初期化通信に失敗しました: {e}") from e
 
     calendar_request = urllib.request.Request(
         urllib.parse.urljoin(FORM_URL, "index.php?page=get_cal_day"),
         headers={
-            "User-Agent": "nes-recycle/0.0.1",
+            "User-Agent": "nes_recycle/0.0.5",
             "Referer": urllib.parse.urljoin(FORM_URL, "index.php"),
             "X-Requested-With": "XMLHttpRequest",
         },
@@ -201,18 +191,14 @@ def fetch_calendar_config() -> dict[str, str]:
             body = response.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")
-        raise RuntimeError(
-            f"カレンダー設定取得の HTTP エラー: {e.code}\n{body[:1000]}"
-        ) from e
+        raise RuntimeError(f"カレンダー設定取得の HTTP エラー: {e.code}\n{body[:1000]}") from e
     except urllib.error.URLError as e:
         raise RuntimeError(f"カレンダー設定取得に失敗しました: {e}") from e
 
     try:
         payload = json.loads(body)
     except json.JSONDecodeError as e:
-        raise RuntimeError(
-            "カレンダー設定レスポンスを JSON として解釈できませんでした。"
-        ) from e
+        raise RuntimeError("カレンダー設定レスポンスを JSON として解釈できませんでした。") from e
 
     if str(payload.get("result")) != "1":
         raise RuntimeError("カレンダー設定取得に失敗しました。")
@@ -297,9 +283,7 @@ def is_valid_profile(profile: Any) -> bool:
 
 
 def normalize_profile(profile: dict[str, Any]) -> dict[str, str]:
-    default_capsule_type = normalize_capsule_type_code(
-        profile.get("default_capsule_type", "1")
-    )
+    default_capsule_type = normalize_capsule_type_code(profile.get("default_capsule_type", "1"))
     if default_capsule_type not in CAPSULE_TYPE_CODE_TO_LABEL:
         default_capsule_type = "1"
 
@@ -450,7 +434,7 @@ def load_profile_from_keychain() -> dict[str, Any] | None:
         try:
             decoded_secret = binascii.unhexlify(secret).decode("utf-8")
             profile = json.loads(decoded_secret)
-        except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError):
+        except binascii.Error, UnicodeDecodeError, json.JSONDecodeError:
             return None
 
     return profile
@@ -478,9 +462,7 @@ def save_profile_to_keychain(profile: dict[str, Any]) -> None:
         )
         log_info("プロフィールを macOS Keychain に保存しました。")
     except FileNotFoundError:
-        log_error(
-            "macOS の security コマンドが見つかりませんでした。Keychain へ保存できません。"
-        )
+        log_error("macOS の security コマンドが見つかりませんでした。Keychain へ保存できません。")
         sys.exit(1)
     except subprocess.CalledProcessError as e:
         log_error("Keychain へのプロフィール保存に失敗しました。")
@@ -549,9 +531,7 @@ def initialize_profile(
     log_info("プロフィール入力が完了しました。")
     profile = normalize_profile(profile)
     save_profile_to_keychain(profile)
-    print(
-        "プロフィールを macOS Keychain に保存しました。次回以降はこの設定を使用します。"
-    )
+    print("プロフィールを macOS Keychain に保存しました。次回以降はこの設定を使用します。")
     return profile
 
 
@@ -669,11 +649,7 @@ class ErrorMessageParser(HTMLParser):
             if "入力エラー" in normalized or "修正" in normalized:
                 candidates.append(normalized)
                 continue
-            if (
-                "エラー" in normalized
-                or "ご入力" in normalized
-                or "存在しません" in normalized
-            ):
+            if "エラー" in normalized or "ご入力" in normalized or "存在しません" in normalized:
                 candidates.append(normalized)
         deduped: list[str] = []
         for item in candidates:
@@ -724,7 +700,7 @@ def http_post_form(url: str, data: dict[str, str]) -> tuple[str, str]:
         data=encoded,
         headers={
             "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": "nes-recycle/0.0.1",
+            "User-Agent": "nes_recycle/0.0.5",
             "Referer": FORM_URL,
         },
         method="POST",
@@ -785,11 +761,7 @@ def summarize_preview(values: dict[str, str]) -> list[tuple[str, str]]:
     )
     receipt_time_value = values.get("receipt_time", "")
     time_label = next(
-        (
-            label
-            for label, remote in TIME_VALUE_MAP.items()
-            if remote == receipt_time_value
-        ),
+        (label for label, remote in TIME_VALUE_MAP.items() if remote == receipt_time_value),
         receipt_time_value or "指定なし",
     )
     date_text = "/".join(
@@ -947,9 +919,7 @@ def run_http_workflow(profile: dict[str, str], args: argparse.Namespace) -> None
         print("本送信が完了した可能性があります。受信メールも確認してください。")
         return
 
-    print(
-        "本送信後の成功判定ができませんでした。ブラウザや受信メールで結果を確認してください。"
-    )
+    print("本送信後の成功判定ができませんでした。ブラウザや受信メールで結果を確認してください。")
     error_messages = parse_error_messages(final_html)
     if error_messages:
         print_error_messages(error_messages)
@@ -982,9 +952,7 @@ def main() -> None:
         default=None,
         help="1=オリジナル / 2=ヴァーチュオ / 3=オリジナルとヴァーチュオ（省略時は Keychain 保存値）",
     )
-    parser.add_argument(
-        "--bags", type=positive_bags, default=1, help="1以上10以下のバッグ数"
-    )
+    parser.add_argument("--bags", type=positive_bags, default=1, help="1以上10以下のバッグ数")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -1006,9 +974,7 @@ def main() -> None:
         print("保存済みプロフィールを破棄して再登録します。")
         existing_profile = load_profile_from_keychain()
         profile_defaults = (
-            normalize_profile(existing_profile)
-            if existing_profile is not None
-            else None
+            normalize_profile(existing_profile) if existing_profile is not None else None
         )
         delete_profile_from_keychain()
         profile = initialize_profile(

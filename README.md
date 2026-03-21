@@ -1,4 +1,4 @@
-# nes-recycle
+# nes_recycle
 
 ネスプレッソの使用済みカプセル回収フォームを、CLI から補助する macOS 向けツールです。
 
