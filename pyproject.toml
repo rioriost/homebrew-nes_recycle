@@ -1,8 +1,8 @@
 [project]
 name = "nes-recycle"
-version = "0.0.4"
+version = "0.0.5"
 description = "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
-readme = "README.md"
+readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 authors = [
   { name = "Rio Fujita", email = "rio_github@rio.st" }
@@ -10,36 +10,38 @@ authors = [
 requires-python = ">=3.14"
 dependencies = []
 
-[project.optional-dependencies]
-test = [
-  "pytest>=7",
-  "pytest-cov>=4",
-]
+[project.urls]
+Homepage = "https://github.com/rioriost/nes_recycle"
+Issues = "https://github.com/rioriost/nes_recycle/issues"
+Repository = "https://github.com/rioriost/nes_recycle"
 
 [project.scripts]
 nes_recycle = "nes_recycle.main:main"
 
-[project.urls]
-Homepage = "https://github.com/rioriost/nes_recycle"
-Issues = "https://github.com/rioriost/nes_recycle/issues"
+[project.optional-dependencies]
+test = [
+  "pytest>=9",
+  "pytest-cov>=7",
+]
+
+[dependency-groups]
+dev = [
+  "build>=1.2.2",
+  "twine>=6.1.0",
+  "ruff>=0.12.0",
+]
 
 [build-system]
-requires = ["hatchling>=1.27.0"]
+requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/nes_recycle"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
 
-[tool.hatch.build.targets.sdist]
-include = [
-  "src/nes_recycle/*.py",
-  "README.md",
-  "LICENSE",
-  "Formula/nes_recycle.rb",
-]
-exclude = [
-  "uv.lock",
-  "dist/.DS_Store",
-  ".envrc",
-  "confirm_form.html",
-]
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
