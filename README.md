@@ -25,8 +25,7 @@
 Homebrew でインストールします。
 
 ```sh
-brew tap rioriost/tap
-brew install nes_recycle
+brew install rioriost/tap/nes_recycle
 ```
 
 ## 使い方
