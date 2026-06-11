@@ -4,7 +4,7 @@ REPO_ROOT := $(CURDIR)
 UV ?= uv
 DIST_DIR := $(REPO_ROOT)/dist
 FORMULA_DIR := $(REPO_ROOT)/Formula
-FORMULA_FILE := $(FORMULA_DIR)/nes_recyle.rb
+FORMULA_FILE := $(FORMULA_DIR)/nes_recycle.rb
 
 .PHONY: release-artifacts sync build formula
 
