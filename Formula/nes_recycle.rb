@@ -3,13 +3,17 @@ class NesRecycle < Formula
 
   desc "CLI tool for previewing and submitting the Nespresso recycling pickup form over HTTP"
   homepage "https://github.com/rioriost/nes_recycle"
-  url "https://github.com/rioriost/nes_recycle/releases/download/0.0.5/nes_recycle-0.0.5.tar.gz"
-  sha256 "f089d7ee2c1ee2cebc97d9829255889702a5e5c0977e0ffdc963a0902437b8ce"
+  url "https://github.com/rioriost/nes_recycle/releases/download/0.0.6/nes_recycle-0.0.6.tar.gz"
+  sha256 "152252b71042389cb2d80ada6c7609c24112dec1b59ee16b2fe8643185ad7f6a"
   license "MIT"
 
   depends_on "python@3.14"
 
   def install
+    if OS.mac?
+      ENV.append "LDFLAGS", "-Wl,-headerpad_max_install_names"
+      ENV.append "RUSTFLAGS", "-C link-arg=-Wl,-headerpad_max_install_names"
+    end
     cd "." do
       virtualenv_install_with_resources
     end
