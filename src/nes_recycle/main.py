@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import argparse
 import binascii
 import html
@@ -347,7 +344,10 @@ def prompt_profile(profile_defaults: dict[str, str] | None = None) -> dict[str, 
             default=defaults.get("customer_number"),
             validator=is_valid_customer_number,
             normalizer=normalize_customer_number,
-            error_message="お客様番号は7桁または8桁の数字で入力してください。7桁の場合は先頭に 0 を補って保存します。",
+            error_message=(
+                "お客様番号は7桁または8桁の数字で入力してください。"
+                "7桁の場合は先頭に 0 を補って保存します。"
+            ),
         ),
         "last_name": prompt_profile_value("姓", default=defaults.get("last_name")),
         "first_name": prompt_profile_value("名", default=defaults.get("first_name")),
@@ -802,7 +802,8 @@ def build_preview(context: SubmissionContext) -> PreviewResult:
 
     if not hidden_values:
         raise RuntimeError(
-            "確認画面の hidden input を抽出できませんでした。フォーム仕様が変更された可能性があります。"
+            "確認画面の hidden input を抽出できませんでした。"
+            "フォーム仕様が変更された可能性があります。"
         )
 
     return PreviewResult(
@@ -927,7 +928,10 @@ def run_http_workflow(profile: dict[str, str], args: argparse.Namespace) -> None
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="ネスプレッソ回収フォームへ HTTP POST で確認画面生成・本送信を行います。プロフィールは macOS Keychain に保存します。"
+        description=(
+            "ネスプレッソ回収フォームへ HTTP POST で確認画面生成・本送信を行います。"
+            "プロフィールは macOS Keychain に保存します。"
+        )
     )
     parser.add_argument(
         "--reset-profile",
@@ -950,7 +954,9 @@ def main() -> None:
         "--capsule-type",
         type=parse_capsule_type_arg,
         default=None,
-        help="1=オリジナル / 2=ヴァーチュオ / 3=オリジナルとヴァーチュオ（省略時は Keychain 保存値）",
+        help=(
+            "1=オリジナル / 2=ヴァーチュオ / 3=オリジナルとヴァーチュオ（省略時は Keychain 保存値）"
+        ),
     )
     parser.add_argument("--bags", type=positive_bags, default=1, help="1以上10以下のバッグ数")
     parser.add_argument(
