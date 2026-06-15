@@ -106,6 +106,40 @@ Safari向けXcodeプロジェクトを生成する場合:
 make safari-project
 ```
 
+Apple Developerの署名設定は、Keychainから自動取得します。既定では `st.rio.nes_recycle` / `safari_development_team_id` のgeneric passwordを先に読み、なければKeychain上の `Developer ID Application` code signing identityからTeam IDを取得します。
+
+```sh
+make safari-project
+```
+
+Team IDを明示する場合:
+
+```sh
+make safari-project SAFARI_DEVELOPMENT_TEAM=ABCDE12345
+```
+
+Apple Development証明書側のTeam IDを使う場合:
+
+```sh
+make safari-project SAFARI_CODESIGN_IDENTITY="Apple Development"
+```
+
+generic passwordとして保存する場合:
+
+```sh
+security add-generic-password -U -s st.rio.nes_recycle -a safari_development_team_id -w ABCDE12345
+```
+
+Bundle Identifierやバージョンも必要に応じて指定できます。
+
+```sh
+make safari-project \
+  SAFARI_BUNDLE_IDENTIFIER=com.example.nesrecycle \
+  SAFARI_DEVELOPMENT_TEAM=ABCDE12345 \
+  SAFARI_MARKETING_VERSION=0.1.0 \
+  SAFARI_CURRENT_PROJECT_VERSION=1
+```
+
 ## 主なオプション
 
 - `--date`

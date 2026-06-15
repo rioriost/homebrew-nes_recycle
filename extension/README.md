@@ -60,8 +60,44 @@ make safari-project
 
 生成先は `build/safari/` です。Safari向け配布にはApple Developer Programの署名設定と、App Store配布またはDeveloper ID配布の手続きが必要です。
 
+Apple Developer Team IDはKeychainから自動取得します。既定では `st.rio.nes_recycle` / `safari_development_team_id` のgeneric passwordを先に読み、なければKeychain上の `Developer ID Application` code signing identityからTeam IDを取得します。
+
+```sh
+make safari-project
+```
+
+Team IDを明示する場合:
+
+```sh
+make safari-project SAFARI_DEVELOPMENT_TEAM=ABCDE12345
+```
+
+Apple Development証明書側のTeam IDを使う場合:
+
+```sh
+make safari-project SAFARI_CODESIGN_IDENTITY="Apple Development"
+```
+
+generic passwordとして保存する場合:
+
+```sh
+security add-generic-password -U -s st.rio.nes_recycle -a safari_development_team_id -w ABCDE12345
+```
+
+Team IDを取得できた場合、生成後のXcodeプロジェクトへ `DEVELOPMENT_TEAM`、`CODE_SIGN_STYLE`、`MARKETING_VERSION`、`CURRENT_PROJECT_VERSION` を反映します。Team IDを取得できない場合はTeam IDを設定せず、ローカル確認用のプロジェクトだけを生成します。
+
 Bundle Identifierを変える場合:
 
 ```sh
 make safari-project SAFARI_BUNDLE_IDENTIFIER=com.example.nesrecycle
+```
+
+署名方式やバージョンを明示する場合:
+
+```sh
+make safari-project \
+  SAFARI_DEVELOPMENT_TEAM=ABCDE12345 \
+  SAFARI_CODE_SIGN_STYLE=Automatic \
+  SAFARI_MARKETING_VERSION=0.1.0 \
+  SAFARI_CURRENT_PROJECT_VERSION=1
 ```

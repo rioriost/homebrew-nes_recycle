@@ -10,6 +10,22 @@ EXTENSION_VERSION := $(shell python3 -c 'import json; print(json.load(open("$(EX
 EXTENSION_ZIP := $(DIST_DIR)/nes_recycle_extension-$(EXTENSION_VERSION).zip
 SAFARI_APP_NAME ?= nes_recycle
 SAFARI_BUNDLE_IDENTIFIER ?= st.rio.nesrecycle
+SAFARI_PROJECT_DIR := $(REPO_ROOT)/build/safari/$(SAFARI_APP_NAME)
+SAFARI_PBXPROJ := $(SAFARI_PROJECT_DIR)/$(SAFARI_APP_NAME).xcodeproj/project.pbxproj
+SAFARI_CODE_SIGN_STYLE ?= Automatic
+SAFARI_MARKETING_VERSION ?= $(EXTENSION_VERSION)
+SAFARI_CURRENT_PROJECT_VERSION ?= 1
+SAFARI_KEYCHAIN_SERVICE ?= st.rio.nes_recycle
+SAFARI_DEVELOPMENT_TEAM_ACCOUNT ?= safari_development_team_id
+SAFARI_CODESIGN_IDENTITY ?= Developer ID Application
+SAFARI_AUTO_DEVELOPMENT_TEAM := $(shell python3 "$(REPO_ROOT)/tools/read_safari_development_team.py" --service "$(SAFARI_KEYCHAIN_SERVICE)" --account "$(SAFARI_DEVELOPMENT_TEAM_ACCOUNT)" --identity-filter "$(SAFARI_CODESIGN_IDENTITY)" 2>/dev/null)
+ifeq ($(origin SAFARI_DEVELOPMENT_TEAM), undefined)
+SAFARI_DEVELOPMENT_TEAM := $(SAFARI_AUTO_DEVELOPMENT_TEAM)
+endif
+SAFARI_SIGNING_ARGS := --bundle-identifier "$(SAFARI_BUNDLE_IDENTIFIER)" --code-sign-style "$(SAFARI_CODE_SIGN_STYLE)" --marketing-version "$(SAFARI_MARKETING_VERSION)" --current-project-version "$(SAFARI_CURRENT_PROJECT_VERSION)"
+ifdef SAFARI_DEVELOPMENT_TEAM
+SAFARI_SIGNING_ARGS += --development-team "$(SAFARI_DEVELOPMENT_TEAM)"
+endif
 
 .PHONY: release-artifacts sync build formula extension-icons extension-validate extension-package safari-project
 
@@ -62,3 +78,4 @@ safari-project: extension-validate
 		--no-open \
 		--no-prompt \
 		--force
+	python3 "$(REPO_ROOT)/tools/configure_safari_project.py" "$(SAFARI_PBXPROJ)" $(SAFARI_SIGNING_ARGS)
