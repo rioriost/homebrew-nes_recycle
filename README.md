@@ -1,8 +1,8 @@
 # nes_recycle
 
-ネスプレッソの使用済みカプセル回収フォームを、CLI から補助する macOS 向けツールです。
+ネスプレッソの使用済みカプセル回収フォームを、CLI とブラウザ拡張機能から補助するツールです。
 
-このツールはブラウザ自動操作ではなく、**HTTP POST ベース**で動作します。
+CLI はブラウザ自動操作ではなく、**HTTP POST ベース**で動作します。
 
 - 初回起動時にプロフィール情報を登録
 - プロフィールは **macOS Keychain** に保存
@@ -12,7 +12,7 @@
 - まず確認画面相当を生成して主要項目を CLI に表示
 - `Yes/No` で `Yes` を選んだときだけ本送信
 
-フォーム側の HTML が古く、ブラウザ自動化に頼りづらいため、この方式を採用しています。
+フォーム側の HTML が古く、CLI ではブラウザ自動化に頼りづらいため、この方式を採用しています。ブラウザでフォームへ入力したい場合は、`extension/` のWebExtensionを使えます。
 
 ## 前提
 
@@ -82,6 +82,29 @@ nes_recycle --help
 4. 主要項目を CLI に表示する
 5. `y` / `n` で確認する
 6. `y` のときだけ本送信する
+
+## ブラウザ拡張機能
+
+`extension/` に Chrome、Edge、Safari Web Extension 向けのフォーム入力補助を同梱しています。
+
+- 対象URL: `https://input-form.jp/modules/nespresso_recyclingathome/`
+- 保存先: ブラウザ拡張機能の `storage.local`
+- 自動入力対象: お客様番号、氏名、郵便番号、住所、電話番号、メールアドレス、回収希望日、時間帯、カプセル種類、バッグ数、確認チェック項目
+- 送信動作: 自動では送信せず、確認画面へ進む前にブラウザ上で内容を確認する前提
+
+Chrome / Edge では `extension/` をパッケージ化されていない拡張機能として読み込みます。Safari では `xcrun safari-web-extension-converter extension` でSafari App Extensionへ変換します。詳しくは `extension/README.md` を参照してください。
+
+配布用zipを作成する場合:
+
+```sh
+make extension-package
+```
+
+Safari向けXcodeプロジェクトを生成する場合:
+
+```sh
+make safari-project
+```
 
 ## 主なオプション
 
